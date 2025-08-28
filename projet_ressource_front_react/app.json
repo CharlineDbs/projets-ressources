@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Ressources relationnelles",
+    "slug": "Ressources relationnelles",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/ressourcesRelationnelles.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/ressourcesRelationnelles.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/ressourcesRelationnelles.png"
+    }
+  }
+}

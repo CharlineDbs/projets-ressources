@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: PlateformeRessource
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  backend:
+    build: ./plateformeRessource-master/plateformeRessource-master/Backend
+    container_name: spring-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/PlateformeRessource
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+    networks:
+      - app-network
+
+  frontend:
+    build: ./projet_ressource_front_react
+    container_name: expo-frontend
+    ports:
+      - "19006:19006"  # Expo Web
+      - "19000:19000"  # Expo
+    volumes:
+      - ./projet_ressource_front_react:/app
+    environment:
+      #EXPO_PUBLIC_API_URL: http://backend:8080
+      EXPO_PUBLIC_API_URL: http://localhost:8080
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
+
+networks:
+  app-network:
+    driver: bridge

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plateforme de ressources</title>
+    <link rel="stylesheet" href="ressourceLibrary.css">
+</head>
+<body>
+<header>
+    <h1>Plateforme de Ressources</h1>
+</header>
+
+<div class="filters">
+    <div class="filter-dropdown">
+        <button class="dropdown-btn">Catégories</button>
+        <div class="dropdown-content">
+    <button data-filter="all" class="active">Tous</button>
+    <button data-filter="Communication">Communication</button>
+    <button data-filter="Cultures">Cultures</button>
+    <button data-filter="Développement personnel">Développement personnel</button>
+    <button data-filter="Intelligence émotionnelle">Intelligence émotionnelle</button>
+    <button data-filter="Loisirs">Loisirs</button>
+    <button data-filter="Monde professionnel">Monde professionnel</button>
+    <button data-filter="Parentalité">Parentalité</button>
+    <button data-filter="Qualité de vie">Qualité de vie</button>
+    <button data-filter="Recherche de sens">Recherche de sens</button>
+    <button data-filter="Santé physique">Santé physique</button>
+    <button data-filter="Santé psychique">Santé psychique</button>
+    <button data-filter="Spiritualité">Spiritualité</button>
+    <button data-filter="Vie affective">Vie affective</button>
+        </div>
+    </div>
+
+<div class="filter-dropdown">
+    <button class="dropdown-btn">Types de relations</button>
+    <div class="dropdown-content">
+    <button data-filter="Soi">Soi</button>
+    <button data-filter="Conjoints">Conjoints</button>
+    <button data-filter="Famille">Famille (enfants, parents, fratrie)</button>
+    <button data-filter="Professionnelle">Professionnelle (collègues, collaborateurs, managers)</button>
+    <button data-filter="Amis">Amis et communautés</button>
+    <button data-filter="Inconnus">Inconnus</button>
+</div>
+    </div>
+
+    <div class="filter-dropdown">
+        <button class="dropdown-btn">Types de documents</button>
+        <div class="dropdown-content">
+    <button data-filter="Activité / Jeu">Activité / Jeu à réaliser</button>
+    <button data-filter="Article">Article</button>
+    <button data-filter="Carte défi">Carte défi</button>
+    <button data-filter="Cours au format PDF">Cours au format PDF</button>
+    <button data-filter="Exercice / Atelier">Exercice / Atelier</button>
+    <button data-filter="Fiche de lecture">Fiche de lecture</button>
+    <button data-filter="Jeu en ligne">Jeu en ligne</button>
+    <button data-filter="Vidéo">Vidéo</button>
+    </div>
+        </div>
+</div>
+
+<main>
+    <section class="resource-type">
+        <h2>📚 Articles</h2>
+        <div class="resource-list">
+            <div class="resource-card">
+                <h3>Titre de l'article</h3>
+                <p>Description rapide de l'article...</p>
+                <a href="#">Lire l'article</a>
+            </div>
+            <!-- + autres articles -->
+        </div>
+    </section>
+
+    <section class="resource-type">
+        <h2>🎥 Vidéos</h2>
+        <div class="resource-list">
+            <div class="resource-card">
+                <h3>Titre de la vidéo</h3>
+                <p>Présentation de la vidéo...</p>
+                <a href="#">Regarder</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="resource-type">
+        <h2>📄 Documents PDF</h2>
+        <div class="resource-list">
+            <div class="resource-card">
+                <h3>Nom du PDF</h3>
+                <p>Résumé du contenu...</p>
+                <a href="#">Télécharger</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="resource-card" data-category="Santé psychique" data-relation="Soi" data-document="Vidéo">
+        <h3>Gérer le stress au quotidien (Vidéo)</h3>
+        <p>Techniques simples de relaxation mentale.</p>
+        <a href="#">Regarder la vidéo</a>
+    </div>
+
+
+</main>
+</body>
+<script  src="ressourceLibrary.js"></script>
+</html>

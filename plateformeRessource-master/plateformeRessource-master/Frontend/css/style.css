@@ -1,0 +1,93 @@
+body {
+  margin: 0;
+  font-family: "Marianne", Arial, sans-serif;
+  background-color: #ffffff;
+  color: #000;
+}
+
+header {
+  background-color: #000091;
+  color: #fff;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+
+.logo {
+  width: 150px; /* Ajuste la taille selon l'image */
+  height: auto;
+  margin-right: 1rem;
+}
+
+
+@media (max-width: 600px) {
+  .logo {
+    width: 30px; /* Réduit l'image pour les petits écrans */
+  }
+}
+
+@media (max-width: 400px) {
+  .logo {
+    display: none; /* Cache l'image si l'écran est trop petit */
+  }
+}
+nav {
+  margin-top: 1rem;
+}
+
+nav a {
+  color: #fff;
+  margin: 0 1rem;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+header {
+  position: relative;
+}
+
+.login-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+}
+
+.login-btn button {
+  background-color: #ffffff;
+  color: #000091;
+  border: 2px solid #000091;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn button:hover {
+  background-color: #000091;
+  color: #ffffff;
+}
+
+main {
+  padding: 2rem;
+  background-color: #f5f5f5;
+}
+
+section {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+  background-color: #e5e5e5;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+}

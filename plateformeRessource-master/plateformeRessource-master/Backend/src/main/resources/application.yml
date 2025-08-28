@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:validate}
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: ${SERVER_PORT:8080}
