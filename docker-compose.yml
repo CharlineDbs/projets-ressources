@@ -36,13 +36,15 @@ services:
     build: ./projet_ressource_front_react
     container_name: expo-frontend
     ports:
-      - "19006:19006"  # Expo Web
-      - "19000:19000"  # Expo
+      - "8081:8081"
     volumes:
-      - ./projet_ressource_front_react:/app
+      - ./projet_ressource_front_react:/app:cached
+      - /app/node_modules
     environment:
-      #EXPO_PUBLIC_API_URL: http://backend:8080
-      EXPO_PUBLIC_API_URL: http://localhost:8080
+      - EXPO_PUBLIC_API_URL=http://localhost:8080
+      - REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
+      - REACT_NATIVE_PACKAGER_PORT=8081
+    command: sh -c "npx expo start --port 8081 --web"
     depends_on:
       - backend
     networks:
