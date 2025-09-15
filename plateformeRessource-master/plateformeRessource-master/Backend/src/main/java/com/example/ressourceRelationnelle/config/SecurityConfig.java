@@ -11,11 +11,12 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf().disable()
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                )
-                .build();
+        http
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll()  // Autorise TOUTES les requêtes sans authentification
+            )
+            .csrf(csrf -> csrf.disable());  // Désactive CSRF pour les tests
+
+        return http.build();
     }
 }

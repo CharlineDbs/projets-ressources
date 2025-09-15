@@ -15,6 +15,10 @@ public class Type_RessourceController {
     @Autowired
     private  Type_RessourceService type_ressourceService;
 
+    public Type_RessourceController(){
+         System.out.println("Type_RessourceController instancié");
+    }
+
     @GetMapping
     public List<Type_Ressource> getAllType_Ressource(){
         return type_ressourceService.getAllType_ressource();

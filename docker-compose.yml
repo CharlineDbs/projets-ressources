@@ -4,17 +4,18 @@ services:
   db:
     image: postgres:16
     container_name: postgres-db
-    restart: always
     environment:
       POSTGRES_DB: PlateformeRessource
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
     networks:
-      - app-network
+      - projets_projets_app-network
+    command: postgres -c fsync=on -c synchronous_commit=on -c full_page_writes=on
 
   backend:
     build: ./plateformeRessource-master/plateformeRessource-master/Backend
@@ -30,7 +31,7 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
     networks:
-      - app-network
+      - projets_projets_app-network
 
   frontend:
     build: ./projet_ressource_front_react
@@ -41,18 +42,19 @@ services:
       - ./projet_ressource_front_react:/app:cached
       - /app/node_modules
     environment:
-      - EXPO_PUBLIC_API_URL=http://localhost:8080
+      - EXPO_PUBLIC_API_URL=http://localhost:8080/api
       - REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
       - REACT_NATIVE_PACKAGER_PORT=8081
     command: sh -c "npx expo start --port 8081 --web"
     depends_on:
       - backend
     networks:
-      - app-network
+      - projets_projets_app-network
+
 
 volumes:
   postgres-data:
 
 networks:
-  app-network:
+  projets_projets_app-network:
     driver: bridge

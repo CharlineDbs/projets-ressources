@@ -1,12 +1,49 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/PlateformeRessource}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5432/PlateformeRessource}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  mvc:
+    static-path-pattern: /static/** 
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    open-in-view: false
+  
+  
+  web:
+    cors:
+      allowed-origins: "http://localhost:8081"
+      allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+      allowed-headers: "*"
+      exposed-headers: "*"
+      max-age: 3600
+    resources:
+      add-mappings: false  # Désactive la gestion des ressources statiques
+
 server:
   port: 8080
+#  servlet:
+#      context-path: /api 
+
+# Activation du logging détaillé pour diagnostiquer les problèmes
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springframework.web.servlet.DispatcherServlet: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.jdbc.datasource: DEBUG
+    org.springframework.web.servlet: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation: TRACE
+    com.example: DEBUG  # <-- Remplace par le package de ton application

@@ -13,13 +13,13 @@ import java.io.IOException;
 
 @CrossOrigin(origins = "http://localhost:8081") // <-- autorise ton frontend
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/ressources")
 public class FileUploadController {
 
     private static final String BASE_UPLOAD_DIR = "C:\\Users\\nonom\\Documents\\Bachelor CDA\\Projet ressource\\Stockage_des_ressources"; // racine des fichiers
 
     @CrossOrigin(origins = "http://localhost:8081")
-    @PostMapping("/ressources/{id}/upload")
+    @PostMapping("/{id}/upload")
     // uploader un fichier lié à une ressource
     public ResponseEntity<String> uploadFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
@@ -44,7 +44,7 @@ public class FileUploadController {
     }
 
 
-    @GetMapping("/ressources/{id}/download")
+    @GetMapping("/{id}/download")
     public ResponseEntity<byte[]> downloadSingleFile(@PathVariable Long id) {
         try {
             File ressourceDir = new File(BASE_UPLOAD_DIR + File.separator + id);
@@ -71,7 +71,7 @@ public class FileUploadController {
         }
     }
 
-    @GetMapping("/ressources/{id}/fileExist")
+    @GetMapping("/{id}/fileExist")
     public String fileExist(@PathVariable Long id){
         File ressourceDir = new File(BASE_UPLOAD_DIR + File.separator + id);
 

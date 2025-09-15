@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import {StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Platform, Alert} from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import globalStyles from '../Styles/globalStyles';
+import { getApiUrl } from '../apiConfig';
 
 const LoginScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -27,6 +28,8 @@ const LoginScreen = ({ navigation }) => {
           error = 'Le mot de passe est requis';
         }
         break;
+      default:
+        break;
     }
     return error;
   };
@@ -34,20 +37,18 @@ const LoginScreen = ({ navigation }) => {
   const handleChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
-
     const error = validateField(field, value);
     setErrors(prev => ({
       ...prev,
-      [field]: error || null
+      [field]: error || null,
     }));
   };
 
   const handleLogin = async () => {
-    // Réinitialiser l'erreur de connexion
     setLoginError('');
-    
+
     // Validation de tous les champs
     const newErrors = {};
     Object.keys(formData).forEach(field => {
@@ -64,7 +65,7 @@ const LoginScreen = ({ navigation }) => {
 
     try {
       console.log('Tentative de connexion au serveur...');
-      const response = await fetch(process.env.EXPO_PUBLIC_API_URL + 'utilisateurs/connexion', {
+      const response = await fetch(`${getApiUrl()}/utilisateurs/connexion`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,9 +77,8 @@ const LoginScreen = ({ navigation }) => {
       console.log('Réponse du serveur:', data);
 
       if (response.ok) {
-        // Stockage des données utilisateur
         await storeToken(data.token, data.id, data.pseudo);
-        navigation.navigate('Ressources')
+        navigation.navigate('Ressources');
       } else {
         if (response.status === 401) {
           setLoginError('Email ou mot de passe incorrect');
@@ -108,6 +108,7 @@ const LoginScreen = ({ navigation }) => {
       await AsyncStorage.setItem('userPseudo', pseudo);
     } catch (e) {
       console.error('Erreur stockage token :', e);
+      Alert.alert('Erreur', 'Impossible de sauvegarder les informations de connexion');
     }
   };
 
@@ -119,13 +120,11 @@ const LoginScreen = ({ navigation }) => {
       >
         <View style={globalStyles.formContainer}>
           <Text style={globalStyles.standardTitle}>Connexion</Text>
-
           {loginError ? (
             <View style={globalStyles.errorContainer}>
               <Text style={globalStyles.standardErrorText}>{loginError}</Text>
             </View>
           ) : null}
-
           <View style={globalStyles.standardInputContainer}>
             <Text style={globalStyles.label}>Email *</Text>
             <TextInput
@@ -139,7 +138,6 @@ const LoginScreen = ({ navigation }) => {
             />
             {errors.email ? <Text style={globalStyles.standardErrorText}>{errors.email}</Text> : null}
           </View>
-
           <View style={globalStyles.standardInputContainer}>
             <Text style={globalStyles.label}>Mot de passe *</Text>
             <TextInput
@@ -152,9 +150,8 @@ const LoginScreen = ({ navigation }) => {
             />
             {errors.password ? <Text style={globalStyles.standardErrorText}>{errors.password}</Text> : null}
           </View>
-
-          <TouchableOpacity 
-            style={[globalStyles.standardButton, isLoading && globalStyles.buttonDisabled]} 
+          <TouchableOpacity
+            style={[globalStyles.standardButton, isLoading && globalStyles.buttonDisabled]}
             onPress={handleLogin}
             disabled={isLoading}
           >
@@ -162,8 +159,7 @@ const LoginScreen = ({ navigation }) => {
               {isLoading ? 'Connexion...' : 'Se connecter'}
             </Text>
           </TouchableOpacity>
-
-          <TouchableOpacity 
+          <TouchableOpacity
             style={globalStyles.standardLinkButton}
             onPress={() => navigation.navigate('Register')}
             disabled={isLoading}
@@ -178,4 +174,4 @@ const LoginScreen = ({ navigation }) => {
   );
 };
 
-export default LoginScreen; 
+export default LoginScreen;

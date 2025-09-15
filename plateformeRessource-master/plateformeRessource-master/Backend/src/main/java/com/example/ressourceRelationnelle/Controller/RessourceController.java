@@ -17,6 +17,9 @@ public class RessourceController {
     @Autowired
     private RessourceService ressourceService;
 
+    public RessourceController(){
+        System.out.println("RessourceController instancié");
+    }
     @GetMapping
     public List<Ressource> getAllRessource(){
         return ressourceService.getAllRessource();

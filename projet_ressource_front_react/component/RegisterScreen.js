@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
-import {  StyleSheet,  View,  Text,  TextInput,  TouchableOpacity,  SafeAreaView,  KeyboardAvoidingView,  Platform,  Alert, ScrollView
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  ScrollView
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 import globalStyle from '../Styles/globalStyles';
+import { getApiUrl } from '../apiConfig';
 
 const RegisterScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -31,7 +42,7 @@ const RegisterScreen = ({ navigation }) => {
       case 'password':
         if (!value) {
           error = 'Le mot de passe est requis';
-        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value)){
+        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value)) {
           error = 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre';
         }
         break;
@@ -66,22 +77,21 @@ const RegisterScreen = ({ navigation }) => {
           }
         }
         break;
+      default:
+        break;
     }
     return error;
   };
 
   const handleChange = (field, value) => {
-    // Mise à jour du formulaire
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
-
-    // Validation en temps réel
     const error = validateField(field, value);
     setErrors(prev => ({
       ...prev,
-      [field]: error || null
+      [field]: error || null,
     }));
   };
 
@@ -95,7 +105,6 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const handleRegister = async () => {
-    // Validation de tous les champs
     const newErrors = {};
     Object.keys(formData).forEach(field => {
       const error = validateField(field, formData[field]);
@@ -108,8 +117,7 @@ const RegisterScreen = ({ navigation }) => {
     }
 
     setIsLoading(true);
-    console.log('URL de l\'API:', process.env.EXPO_PUBLIC_API_URL);
-    console.log('Données envoyées:', formData);
+    console.log('URL de l\'API:', getApiUrl());
 
     try {
       const userData = {
@@ -120,20 +128,20 @@ const RegisterScreen = ({ navigation }) => {
         codepostal: formData.codepostal,
         anneenaissance: parseInt(formData.anneenaissance),
         etatcivil: formData.etatcivil,
-        actif: true
+        actif: true,
       };
+      console.log('Données envoyées:', userData);
 
-      console.log('Tentative de connexion à l\'API...');
-      const response = await fetch(process.env.EXPO_PUBLIC_API_URL + 'utilisateurs/inscription', {
+      const response = await fetch(`${getApiUrl()}/utilisateurs/inscription`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
         },
         body: JSON.stringify(userData),
       });
-
       console.log('Statut de la réponse:', response.status);
+
       let data;
       try {
         const contentType = response.headers.get("content-type");
@@ -148,47 +156,40 @@ const RegisterScreen = ({ navigation }) => {
       } catch (error) {
         console.error('Erreur de parsing:', error);
         Alert.alert('Erreur', 'Une erreur est survenue lors de l\'inscription');
+        setIsLoading(false);
         return;
       }
 
       if (response.ok) {
         console.log('Inscription réussie, préparation de la redirection...');
-        // Stocker les données utilisateur
         await storeUserData(data);
-        
-        // Redirection directe sans alerte
-        console.log('Tentative de redirection directe...');
+
         try {
-          navigation.navigate('Ressources');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'Ressources' }],
+            })
+          );
           console.log('Navigation effectuée');
         } catch (error) {
           console.error('Erreur de navigation:', error);
-          // Si la navigation échoue, on essaie une autre approche
-          try {
-            console.log('Tentative de navigation alternative...');
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: 'Ressources' }],
-              })
-            );
-            console.log('Navigation alternative effectuée');
-          } catch (error2) {
-            console.error('Erreur de navigation alternative:', error2);
-          }
+          Alert.alert('Erreur', 'Redirection impossible. Veuillez réessayer.');
         }
       } else {
         if (data && typeof data === 'object') {
           setErrors(data);
         } else {
-          Alert.alert('Erreur', 'Une erreur est survenue lors de l\'inscription');
+          Alert.alert('Erreur', data.message || 'Une erreur est survenue lors de l\'inscription');
         }
       }
     } catch (error) {
       console.error('Erreur:', error);
       Alert.alert(
         'Erreur',
-        'Impossible de se connecter au serveur. Vérifiez votre connexion.'
+        error.message.includes('Network request failed') || error.message.includes('Failed to fetch')
+          ? 'Impossible de se connecter au serveur. Vérifiez votre connexion.'
+          : 'Une erreur est survenue lors de l\'inscription'
       );
     } finally {
       setIsLoading(false);
@@ -204,7 +205,6 @@ const RegisterScreen = ({ navigation }) => {
         <ScrollView contentContainerStyle={globalStyle.scrollContainer}>
           <View style={globalStyle.formContainer}>
             <Text style={globalStyle.standardTitle}>Inscription</Text>
-
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>Email *</Text>
               <TextInput
@@ -218,7 +218,6 @@ const RegisterScreen = ({ navigation }) => {
               />
               {errors.email ? <Text style={globalStyle.standardErrorText}>{errors.email}</Text> : null}
             </View>
-
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>Mot de passe *</Text>
               <TextInput
@@ -231,7 +230,6 @@ const RegisterScreen = ({ navigation }) => {
               />
               {errors.password ? <Text style={globalStyle.standardErrorText}>{errors.password}</Text> : null}
             </View>
-
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>Pseudo *</Text>
               <TextInput
@@ -244,11 +242,10 @@ const RegisterScreen = ({ navigation }) => {
               />
               {errors.pseudo ? <Text style={globalStyle.standardErrorText}>{errors.pseudo}</Text> : null}
             </View>
-
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>Ville *</Text>
               <TextInput
-                testID='villeInput'
+                testID="villeInput"
                 style={[globalStyle.standardInput, errors.ville ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre ville"
                 value={formData.ville}
@@ -257,11 +254,10 @@ const RegisterScreen = ({ navigation }) => {
               />
               {errors.ville ? <Text style={globalStyle.standardErrorText}>{errors.ville}</Text> : null}
             </View>
-
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>Code postal *</Text>
               <TextInput
-                testID='cpInput'
+                testID="cpInput"
                 style={[globalStyle.standardInput, errors.codepostal ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre code postal"
                 value={formData.codepostal}
@@ -272,11 +268,10 @@ const RegisterScreen = ({ navigation }) => {
               />
               {errors.codepostal ? <Text style={globalStyle.standardErrorText}>{errors.codepostal}</Text> : null}
             </View>
-
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>Année de naissance *</Text>
               <TextInput
-                testID='birthdayInput'
+                testID="birthdayInput"
                 style={[globalStyle.standardInput, errors.anneenaissance ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre année de naissance"
                 value={formData.anneenaissance}
@@ -287,7 +282,6 @@ const RegisterScreen = ({ navigation }) => {
               />
               {errors.anneenaissance ? <Text style={globalStyle.standardErrorText}>{errors.anneenaissance}</Text> : null}
             </View>
-
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>État civil</Text>
               <View style={globalStyle.standardRadioContainer}>
@@ -319,9 +313,8 @@ const RegisterScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
             </View>
-
-            <TouchableOpacity 
-              style={[globalStyle.standardButton, isLoading && globalStyle.buttonDisabled]} 
+            <TouchableOpacity
+              style={[globalStyle.standardButton, isLoading && globalStyle.buttonDisabled]}
               onPress={handleRegister}
               disabled={isLoading}
             >
@@ -329,8 +322,7 @@ const RegisterScreen = ({ navigation }) => {
                 {isLoading ? 'Inscription...' : 'S\'inscrire'}
               </Text>
             </TouchableOpacity>
-
-            <TouchableOpacity 
+            <TouchableOpacity
               style={globalStyle.standardLinkButton}
               onPress={() => navigation.navigate('Login')}
               disabled={isLoading}
@@ -346,5 +338,4 @@ const RegisterScreen = ({ navigation }) => {
   );
 };
 
-export default RegisterScreen; 
-
+export default RegisterScreen;

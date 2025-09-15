@@ -16,6 +16,10 @@ public class Type_RelationController {
     @Autowired
     private Type_RelationService type_relationService;
 
+    public Type_RelationController(){
+        System.out.println("TypeRelationController instancié");
+    }
+
     @GetMapping
     public List<Type_Relation> getAllType_Relation(){return type_relationService.getAllType_Relation();}
 }
